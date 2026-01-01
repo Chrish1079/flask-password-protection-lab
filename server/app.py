@@ -25,6 +25,21 @@ class Signup(Resource):
         
         return user_schema.dump(user), 201
 
+class Login(Resource):
+
+    def post(self):
+        
+        username = request.json.get('username')
+        password = request.json.get('password')
+        
+        user = User.query.filter(User.username == username).first()
+        
+        if user and user.authenticate(password):
+            session['user_id'] = user.id
+            return user_schema.dump(user), 200
+        else:
+            return {'error': 'Invalid username or password'}, 401
+
 class CheckSession(Resource):
 
     def get(self):
@@ -47,6 +62,7 @@ class ClearSession(Resource):
         return {}, 204
 
 api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 
