@@ -40,6 +40,14 @@ class Login(Resource):
         else:
             return {'error': 'Invalid username or password'}, 401
 
+class Logout(Resource):
+
+    def delete(self):
+        
+        session['user_id'] = None
+        
+        return {}, 204
+
 class CheckSession(Resource):
 
     def get(self):
@@ -63,6 +71,7 @@ class ClearSession(Resource):
 
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Login, '/login', endpoint='login')
+api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 
