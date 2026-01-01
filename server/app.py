@@ -25,6 +25,18 @@ class Signup(Resource):
         
         return user_schema.dump(user), 201
 
+class CheckSession(Resource):
+
+    def get(self):
+        
+        user_id = session.get('user_id')
+        
+        if user_id:
+            user = User.query.filter(User.id == user_id).first()
+            return user_schema.dump(user), 200
+        else:
+            return {}, 204
+
 class ClearSession(Resource):
 
     def delete(self):
@@ -35,6 +47,7 @@ class ClearSession(Resource):
         return {}, 204
 
 api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 
 if __name__ == '__main__':
